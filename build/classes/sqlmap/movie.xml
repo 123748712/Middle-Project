@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap
+			PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+			"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="movie">
+
+	<resultMap class="movieVO" id="movieMainMap">
+		<result property="movCd" column="mov_cd"/>
+		<result property="movNm" column="mov_nm"/>
+	</resultMap>
+	
+	<resultMap class="movieVO" id="movieChartMap">
+		<result property="movCd" column="mov_cd"/>
+		<result property="movNm" column="mov_nm"/>
+		<result property="rate" column="rate"/>
+	</resultMap>
+	
+	<resultMap class="movieVO" id="searchMovieMap">
+		<result property="movCd" column="mov_cd"/>
+		<result property="movNm" column="mov_nm"/>
+		<result property="movPd" column="mov_pd"/>
+		<result property="movPt" column="mov_pt"/>
+		<result property="movPr" column="mov_pr"/>
+	</resultMap>
+	
+	<select id="getMovieMain" resultMap="movieMainMap">
+	
+		SELECT *
+		FROM   (
+			SELECT MOV_CD
+			    ,  MOV_NM
+			FROM   MOVIE
+			ORDER BY TO_NUMBER(MOV_CD)
+		) WHERE ROWNUM &lt;= 3
+		
+	</select>
+	
+	<select id="getMovieChartList" resultMap="movieChartMap">
+	
+		SELECT *
+		FROM   (
+		    SELECT M.MOV_CD
+		        ,  M.MOV_NM
+		        ,  (COUNT(M.MOV_CD) * 162 / 100) RATE
+		    FROM   MOVIE M
+		    INNER JOIN WATCH W ON (M.MOV_CD = W.MOV_CD)
+		    GROUP BY M.MOV_CD, M.MOV_NM
+		    ORDER BY RATE DESC, M.MOV_NM
+		) WHERE ROWNUM &lt;= 10
+		
+	</select>
+	
+	<select id="searchMovieList" resultMap="searchMovieMap">
+	
+		SELECT MOV_CD
+		    ,  MOV_NM
+		    ,  MOV_PD
+		    ,  MOV_PT
+		    ,  MOV_PR
+		FROM   MOVIE
+		WHERE  MOV_NM LIKE '%' || #movNm# || '%'
+		ORDER BY TO_NUMBER(MOV_CD)
+		
+	</select>
+</sqlMap>

@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+			PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+			"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+			
+			
+<sqlMap namespace="join">
+	<resultMap class="joinVO" id="joinMap">
+		<result property="num" column="MEM_CD"/>
+		<result property="id" column="MEM_ID"/>
+		<result property="pw" column="MEM_PW"/>
+		<result property="name" column="MEM_NM"/>
+		<result property="nickName" column="MEM_NIC"/>
+		<result property="bir" column="MEM_BIR"/>
+		<result property="gender" column="MEM_GD"/>
+		<result property="tel" column="MEM_NUM"/>
+		<result property="email" column="MEM_EM"/>
+		<result property="add" column="MEM_ADD"/>
+		<result property="zip" column="MEM_ZIP"/>
+		<result property="msCd" column="MS_CD"/>
+	</resultMap>
+
+	<!-- 회원가입 -->
+	<insert id="insertMember" parameterClass="kr.or.ddit.lottecgvbox.vo.JoinVO">
+	
+	<selectKey keyProperty="num" resultClass="int">
+		SELECT MEMBER_NUM_SEQ.NEXTVAL FROM DUAL
+	</selectKey>
+		INSERT INTO MEMBER (
+		MEM_CD,
+		MEM_NM,
+		MEM_NUM,
+		MEM_ID,
+		MEM_PW,
+		MEM_NIC,
+		MEM_GD,
+		MEM_BIR,
+		MEM_ADD,
+		MEM_ZIP,
+		MEM_EM,
+		MS_CD)
+		VALUES(
+		member_num_seq.nextval,
+		#name#,
+		#tel#,
+		#id#,
+		#pw#,
+		#nickName#,
+		#gender#,
+		TO_DATE(#bir#, 'YYYY/MM/DD'),
+		#add#,
+		#zip#,
+		#email#,
+		#msCd#)
+	</insert>
+	
+	<insert id="insertMembership" parameterClass="membershipVO">
+		INSERT INTO MEMBERSHIP
+		VALUE (#msCd#, #msNum#, #msRk#)
+	</insert>
+
+	<!-- ID 중복조회 -->
+	<select id="checkMember" resultClass="int" parameterClass="string">
+		SELECT COUNT(*)
+		FROM MEMBER
+		WHERE MEM_ID = #id#
+	</select>
+
+	<!-- 닉네임 중복조회 -->
+	<select id="checkNick" resultClass="int" parameterClass="string">
+		SELECT COUNT(*)
+		FROM MEMBER
+		WHERE MEM_ID = #nickName#
+	</select>
+	
+	<!-- 로그인아이디 비밀번호 체크 -->
+	<select id="checkLogin" resultClass="int" parameterClass="map">
+		SELECT COUNT(*)
+		FROM MEMBER
+		WHERE MEM_ID = #id#
+		AND MEM_PW = #pw#
+	</select>
+
+	<select id="getName" resultClass="String" parameterClass="map">
+		SELECT MEM_NM
+		FROM MEMBER
+		WHERE MEM_ID = #id#
+		AND MEM_PW = #pw#	
+	</select>
+	
+	<select id="getMemCode" parameterClass="String" resultClass="String">
+		SELECT MEM_CD
+		FROM   MEMBER
+		WHERE  MEM_ID = #id#
+	</select>
+	
+	<delete id="deleteMember" parameterClass="String">
+		DELETE FROM MEMBER
+		WHERE MEM_PW = #pw#
+	</delete>
+	
+	<select id="searchLoginId" resultClass="String" parameterClass="map">
+		SELECT MEM_ID
+		FROM MEMBER
+		WHERE MEM_NM = #searchName#
+		AND MEM_NUM = #searchTel#
+	</select>
+	
+	<select id="searchLoginPw" resultMap="joinMap" parameterClass="map">
+		SELECT *
+		FROM MEMBER
+		WHERE MEM_ID = #searchId#
+		AND MEM_NUM = #searchTel#
+	</select>
+	
+	<select id="usingLogin" parameterClass="String" resultClass="int">
+		SELECT COUNT(*)
+		FROM MEMBER
+		WHERE MEM_ID = #id#
+		AND MEM_USE = '1'
+	</select>
+	
+	<update id="useId" parameterClass="String">
+		UPDATE MEMBER
+		SET MEM_USE = '1'
+		WHERE MEM_ID = #id#
+	</update>
+	
+	<update id="notUseId" parameterClass="String">
+		UPDATE MEMBER
+		SET MEM_USE = '0'
+		WHERE MEM_ID = #id#
+	</update>
+	
+	<update id="AllNotUseId" parameterClass="String">
+		UPDATE MEMBER
+		SET MEM_USE = '0'
+	</update>
+	
+	<select id="selectEmail" parameterClass="String" resultClass="String">
+		select mem_em 
+		from member
+		where mem_id = #id#
+	</select>
+	
+	<select id="getMemMsCd" resultClass="String">
+		SELECT MS_CD
+		FROM   MEMBER
+		WHERE  MEM_ID = #memId#
+	</select>
+</sqlMap>

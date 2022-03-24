@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+			PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+			"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+			
+			
+<sqlMap namespace="qna">
+
+	<!-- 전체 글 갯수 조회 -->
+	<select id="countQList" resultClass="int">
+	  SELECT COUNT(*) FROM QNA
+	</select>
+
+	<!-- 리스트 출력 -->
+	<select id="qnaList" resultClass="qnaVO" parameterClass="map">
+	  SELECT A.* FROM (
+    	SELECT ROWNUM AS RNUM, B.*  FROM (
+         	SELECT * FROM QNA 
+         	ORDER BY QNA_NUM DESC) B
+	<![CDATA[
+     	WHERE ROWNUM <= #end#) A 
+ 	  WHERE A.RNUM >= #start#
+	]]>
+	</select>
+	
+	<!-- 게시글 저장 -->
+	<insert id="insertQna" parameterClass="qnaVO">
+		
+		<selectKey keyProperty="qna_num" resultClass="int">
+		  SELECT QNA_NUM_SEQ.NEXTVAL FROM DUAL
+		</selectKey>
+		INSERT INTO QNA
+		VALUES(
+			#qna_num#,
+			#mem_cd#,
+			#nmem_cd#,
+			#qna_wri#,
+			#qna_tit#,
+			#qna_con#
+		)
+	</insert>
+	
+	<!-- 게시글 수정/삭제 -->
+	<delete id="qnaDelete" parameterClass="int">
+	  DELETE QNA WHERE QNA_NUM = #data#
+	</delete>
+	
+	<update id="qnaUpdate" parameterClass="qnaVO">
+	  UPDATE QNA
+		SET  QNA_CON = #qna_con#
+	  WHERE  QNA_NUM = #qna_num#
+	</update>
+</sqlMap>

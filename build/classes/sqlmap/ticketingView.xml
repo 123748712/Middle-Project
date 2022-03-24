@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap
+			PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+			"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="ticketingView">
+
+	<!-- 회원 -->
+	<resultMap class="watchVO" id="memberWatchMap">
+		<result property="watCd" column="wat_cd"/>
+		<result property="memCd" column="mem_cd"/>
+		<result property="movCd" column="mov_cd"/>
+		<result property="watDt" column="wat_dt"/>
+		<result property="memberVO" resultMap="ticketingView.memberMap"/>
+		<result property="movieVO" resultMap="ticketingView.movieMap"/>
+	</resultMap>
+	
+	<resultMap class="memberVO" id="memberMap">
+		<result property="memId" column="mem_id"/>
+		<result property="memNm" column="mem_nm"/>
+	</resultMap>
+	<!-- //회원 -->
+	
+	<!-- 비회원 -->
+	<resultMap class="watchVO" id="nonMemberWatchMap">
+		<result property="watCd" column="wat_cd"/>
+		<result property="nMemCd" column="nmem_cd"/>
+		<result property="movCd" column="mov_cd"/>
+		<result property="watDt" column="wat_dt"/>
+		<result property="movieVO" resultMap="ticketingView.movieMap"/>
+	</resultMap>
+	
+	<resultMap class="watchVO" id="nonMemberWatchAdminMap">
+		<result property="watCd" column="wat_cd"/>
+		<result property="nMemCd" column="nmem_cd"/>
+		<result property="movCd" column="mov_cd"/>
+		<result property="watDt" column="wat_dt"/>
+		<result property="nonMemberVO" resultMap="ticketingView.nomMemberMap"/>
+		<result property="movieVO" resultMap="ticketingView.movieMap"/>
+	</resultMap>
+	
+	<resultMap class="nonMemberVO" id="nomMemberMap">
+		<result property="nMemNum" column="nmem_num"/>
+	</resultMap>
+	<!-- //비회원 -->
+	
+	<resultMap class="movieVO" id="movieMap">
+		<result property="movNm" column="mov_nm"/>
+	</resultMap>
+ 
+ 	<select id="getNonMemberTicketings" resultMap="nonMemberWatchMap" remapResults="true">
+ 		
+ 		SELECT W.WAT_CD
+		    ,  W.NMEM_CD
+		    ,  W.MOV_CD
+		    ,  W.WAT_DT
+		    ,  MV.MOV_NM
+		FROM   WATCH W, NON_MEMBER N, MOVIE MV
+		WHERE  W.NMEM_CD = N.NMEM_CD
+		AND    W.MOV_CD = MV.MOV_CD
+		AND    N.NMEM_NUM = #nMemNum#
+		ORDER BY W.WAT_DT DESC
+ 		
+ 	</select>
+ 	
+ 	<delete id="deleteNonMemberTicketing">
+ 	
+ 		DELETE FROM WATCH
+		WHERE  WAT_CD = #watCd#
+ 	
+ 	</delete>
+ 	
+ 	<select id="getMemberTicketings" resultMap="memberWatchMap" remapResults="true">
+ 	
+ 		SELECT W.WAT_CD
+		    ,  W.MEM_CD
+		    ,  W.MOV_CD
+		    ,  W.WAT_DT
+		    ,  M.MEM_ID
+		    ,  M.MEM_NM
+		    ,  MV.MOV_NM
+		FROM   WATCH W, MEMBER M, MOVIE MV
+		WHERE  W.MEM_CD = M.MEM_CD
+		AND    W.MOV_CD = MV.MOV_CD
+		AND    M.MEM_CD = #memCd#
+		ORDER BY W.WAT_DT DESC
+ 	
+ 	</select>
+ 	
+ 	<delete id="deleteMemberTicketing">
+ 	
+ 		DELETE FROM WATCH
+		WHERE  WAT_CD = #watCd#
+ 	
+ 	</delete>
+ 	
+ 	<select id="getMemberTicketingsAdmin" resultMap="memberWatchMap" remapResults="true">
+ 	
+ 		SELECT W.WAT_CD
+		    ,  W.MEM_CD
+		    ,  W.MOV_CD
+		    ,  W.WAT_DT
+		    ,  M.MEM_ID
+		    ,  M.MEM_NM
+		    ,  MV.MOV_NM
+		FROM   WATCH W, MEMBER M, MOVIE MV
+		WHERE  W.MEM_CD = M.MEM_CD
+		AND    W.MOV_CD = MV.MOV_CD
+		ORDER BY W.WAT_DT DESC
+ 	
+ 	</select>
+ 	
+ 	<select id="getNonMemberTicketingsAdmin" resultMap="nonMemberWatchAdminMap" remapResults="true">
+ 		
+ 		SELECT W.WAT_CD
+		    ,  W.NMEM_CD
+		    ,  W.MOV_CD
+		    ,  W.WAT_DT
+		    ,  N.NMEM_NUM NMEM_NUM
+		    ,  MV.MOV_NM
+		FROM   WATCH W, NON_MEMBER N, MOVIE MV
+		WHERE  W.NMEM_CD = N.NMEM_CD
+		AND    W.MOV_CD = MV.MOV_CD
+		ORDER BY W.WAT_DT DESC
+ 		
+ 	</select>
+</sqlMap>

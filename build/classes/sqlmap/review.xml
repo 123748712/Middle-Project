@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+			PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+			"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+			
+			
+<sqlMap namespace="review">
+
+	<!-- 전체 글 갯수 조회 -->
+	<select id="countRevList" resultClass="int">
+	  SELECT COUNT(*) FROM MOVIE_REV
+	</select>
+
+	<!-- 리스트 출력 -->
+	<select id="reviewList" resultClass="reviewVO" parameterClass="map">
+	  SELECT A.* FROM (
+    	SELECT ROWNUM AS RNUM, B.*  FROM (
+         	SELECT * FROM MOVIE_REV
+         	ORDER BY MOV_REV_NUM DESC) B
+	<![CDATA[
+     	WHERE ROWNUM <= #end#) A 
+ 	  WHERE A.RNUM >= #start#
+	]]>
+	</select>
+	
+	<!-- 게시글 저장 -->
+	<insert id="insertReview" parameterClass="reviewVO">
+		
+		<selectKey keyProperty="mov_rev_num" resultClass="int">
+		  SELECT REVIEW_NUM_SEQ.NEXTVAL FROM DUAL
+		</selectKey>
+		INSERT INTO MOVIE_REV
+		VALUES(
+			#mov_rev_num#,
+			#mem_cd#,
+			#nmem_cd#,
+			#mov_rev_wri#,
+			#mov_rev_tit#,
+			#mov_rev_con#
+		)
+	</insert>
+	
+	<!-- 게시글 수정/삭제 -->
+	<delete id="reviewDelete" parameterClass="int">
+	  DELETE MOVIE_REV WHERE MOV_REV_NUM = #data#
+	</delete>
+	
+	<update id="reviewUpdate" parameterClass="reviewVO">
+	  UPDATE MOVIE_REV
+		SET  MOV_REV_CON = #mov_rev_con#
+	  WHERE  MOV_REV_NUM = #mov_rev_num#
+	</update>
+</sqlMap>

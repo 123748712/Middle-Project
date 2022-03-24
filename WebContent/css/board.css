@@ -1,0 +1,88 @@
+.boardWrap #send {
+  margin-left: 500px;
+}
+/*modal 항목 너비조절 */
+.boardWrap .col-sm-2 {
+  padding: 0px;
+}
+.boardWrap #list {
+  padding: 10px;
+  margin: 10px;	
+}
+.boardWrap textarea {
+  margin-bottom: 10px;
+}
+.boardWrap .p1,
+.boardWrap .rp1 {
+  float: left;
+  width: calc(65% - 1%);
+}
+.boardWrap .p2,
+.boardWrap .rp2 {
+  float: right;
+  width: calc(25% - 1%);
+  margin-bottom: 10px;
+  text-align: right		/* 또는 end */
+}
+.boardWrap .p3,
+.boardWrap .rp3 {
+  clear: both;
+}
+.boardWrap .container {
+  display: flex;
+  justify-content: center;
+}
+.boardWrap .pager {
+  float: left;
+  margin: 5px 0;
+}
+.boardWrap .pagination.pager {
+  display: flex;
+  gap: 0 5px;
+}
+.boardWrap .pagination.pager li {
+  display: inline-block;
+}
+.boardWrap .rep {
+  border: lightgray 2px dashed;
+  margin:10px;
+}
+.boardWrap input[value="등록"] {
+  margin: 10px;
+  vertical-align: bottom
+}
+.boardWrap #brdModiForm,
+.boardWrap #repModiForm {
+  display: none;
+}
+.boardWrap input#wrt {
+	margin-bottom: 20px;
+	color: #fff;
+    background-color: #ed3124;
+}
+.boardWrap .pager li>a,
+.boardWrap .pager li>span {
+    display: inline-block;
+    padding: 5px 14px;
+    background-color: #fdfcfc;
+    border: 1px solid #ed3124;
+    border-radius: 15px;
+    color: #ed3124;
+}
+.boardWrap .pagination>.active>a,
+.boardWrap .pagination>.active>a:focus,
+.boardWrap .pagination>.active>a:hover,
+.boardWrap .pagination>.active>span,
+.boardWrap .pagination>.active>span:focus,
+.boardWrap .pagination>.active>span:hover {
+    z-index: 3;
+    color: #fffdfd;
+    cursor: default;
+    background-color: #ed3124;
+    border-color: #f5f5f5;
+}
+input#wrt2.btn.btn-basic{
+    margin-bottom: 20px;
+    color: #fff;
+    background-color: #ed3124;
+}

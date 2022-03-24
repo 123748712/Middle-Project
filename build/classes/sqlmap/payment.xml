@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+			PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+			"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+			
+			
+<sqlMap namespace="payment">
+
+	<!-- 전체 글 갯수 조회 -->
+	<select id="countPList" resultClass="int">
+	  SELECT COUNT(*) FROM PAYMENT_SC
+	</select>
+
+	<!-- 리스트 출력 -->
+	<select id="paymentList" resultClass="paymentVO" parameterClass="map">
+	  SELECT A.* FROM (
+    	SELECT ROWNUM AS RNUM, B.*  FROM (
+         	SELECT * FROM PAYMENT_SC 
+         	ORDER BY PAY_SC_NUM DESC) B
+	<![CDATA[
+     	WHERE ROWNUM <= #end#) A 
+ 	  WHERE A.RNUM >= #start#
+	]]>
+	</select>
+	
+	<!-- 게시글 저장 -->
+	<insert id="insertPayment" parameterClass="paymentVO">
+		
+		<selectKey keyProperty="pay_sc_num" resultClass="int">
+		  SELECT PAYMENT_NUM_SEQ.NEXTVAL FROM DUAL
+		</selectKey>
+		INSERT INTO PAYMENT_SC
+		VALUES(
+			#pay_sc_num#,
+			#mem_cd#,
+			#nmem_cd#,
+			#pay_sc_wri#,
+			#pay_sc_tit#,
+			#pay_sc_con#
+		)
+	</insert>
+	
+	<!-- 게시글 수정/삭제 -->
+	<delete id="paymentDelete" parameterClass="int">
+	  DELETE PAYMENT_SC WHERE PAY_SC_NUM = #data#
+	</delete>
+	
+	<update id="paymentUpdate" parameterClass="paymentVO">
+	  UPDATE PAYMENT_SC
+		SET  PAY_SC_CON = #pay_sc_con#
+	  WHERE  PAY_SC_NUM = #pay_sc_num#
+	</update>
+</sqlMap>

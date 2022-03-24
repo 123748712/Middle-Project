@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap
+			PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+			"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="nonMember">
+  
+  <insert id="insertNmem" parameterClass="kr.or.ddit.lottecgvbox.vo.NonMemberVO">
+    
+    insert into non_member (NMEM_CD, NMEM_IP, NMEM_BIR,NMEM_NUM, NMEM_PW)
+	values (#nMemCd#, #nMemIp#, #nMemBir#, #nMemNum#, #nMemPw#)		
+	   
+  </insert>
+  
+  
+  
+  
+ <resultMap class="nonMemberVO" id="cartMap">
+	<result property="nMemCd" column="NMEM_CD"/>
+	<result property="nMemIp" column="NMEM_IP"/>
+	<result property="nMemBir" column="NMEM_BIR"/>
+	<result property="nMemNum" column="NMEM_NUM"/>
+	<result property="nMemPw" column="NMEM_PW"/>
+ </resultMap>
+  
+  
+  <select id="nonMemCdChk" resultClass="int">
+  	select count(*) as cnt from non_member
+	where nmem_cd = #nMemCd#
+  </select>
+  
+  
+
+	
+</sqlMap>
+
+
+
+
+
+

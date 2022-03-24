@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+			PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+			"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+			
+			
+<sqlMap namespace="notice">
+
+	<select id="getNoticeOne" resultClass="noticeVO">
+		SELECT *
+		FROM   (
+		    SELECT NOTI_NUM
+		        ,  NOTI_WRI
+		        ,  NOTI_TIT
+		        ,  NOTI_CON
+		    FROM   NOTICE
+		    ORDER BY NOTI_NUM DESC
+		) WHERE ROWNUM = 1
+	</select>
+
+	<!-- 전체 글 갯수 조회 -->
+	<select id="countNList" resultClass="int">
+	  SELECT COUNT(*) FROM NOTICE
+	</select>
+
+	<!-- 리스트 출력 -->
+	<select id="noticeList" resultClass="noticeVO" parameterClass="map">
+	  SELECT A.* FROM (
+    	SELECT ROWNUM AS RNUM, B.*  FROM (
+         	SELECT * FROM NOTICE
+         	ORDER BY NOTI_NUM DESC) B
+	<![CDATA[
+     	WHERE ROWNUM <= #end#) A 
+ 	  WHERE A.RNUM >= #start#
+	]]>
+	</select>
+	
+	<!-- 게시글 저장 -->
+	<insert id="insertNotice" parameterClass="noticeVO">
+		
+		<selectKey keyProperty="noti_num" resultClass="int">
+		  SELECT NOTI_NUM_SEQ.NEXTVAL FROM DUAL
+		</selectKey>
+		INSERT INTO NOTICE
+		VALUES(
+			#noti_num#,
+			#noti_wri#,
+			#noti_tit#,
+			#noti_con#
+		)
+	</insert>
+	
+	<!-- 게시글 수정/삭제 -->
+	<delete id="noticeDelete" parameterClass="int">
+	  DELETE NOTICE WHERE NOTI_NUM = #data#
+	</delete>
+	
+	<update id="noticeUpdate" parameterClass="noticeVO">
+	  UPDATE NOTICE
+		SET
+			NOTI_TIT = #noti_tit#,
+			NOTI_CON = #noti_con#
+	  WHERE NOTI_NUM = #noti_num#
+	</update>
+</sqlMap>

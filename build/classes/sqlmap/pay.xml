@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap
+			PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+			"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="pay">
+
+<!-- 	<resultMap class="cardVO" id="cardMap"> -->
+<!-- 		<result property="cardCd" column="card_cd" /> -->
+<!-- 		<result property="cardCom" column="card_com" /> -->
+<!-- 		<result property="cardNum" column="card_num" /> -->
+<!-- 		<result property="memCd" column="mem_cd" /> -->
+<!-- 		<result property="nmemCd" column="nmem_cd" /> -->
+<!-- 		<result property="favrCardAt" column="favr_card_at" /> -->
+<!-- 	</resultMap> -->
+	
+	
+	<!-- 비회원 카드결제 -->
+	<insert id="nonMemCardPay" parameterClass="nonMemberCardPayVO">
+		INSERT INTO (NMCPAY_NMEM, NMCPAY_CD, CARD_CD)
+		VALUES (#nMemCardPayCd#, #nMemCd#, #nCardCd#)
+	</insert>
+
+	<!-- 비회원 핸드폰 결제 -->
+	<insert id="nonMemPhonePay" parameterClass="nonMemberPhonePayVO">
+		INSERT INTO (NMPPAY_CD, NMEM_CD)
+		VALUES (#nMemPhPayCd#, #nMemCd#)
+	</insert>
+	
+	<!-- 비회원 무통장입금 -->
+	<insert id="nonMemAccPay" parameterClass="nonMemberAccountPayVO">
+		INSERT INTO (NMPPAY_CD, NMEM_CD)
+		VALUES (#nMemAccPayCd#, #nMemCd#)
+	</insert>
+	
+	<!-- 회원 카드결제 -->
+	<insert id="memberCardPay" parameterClass="memberCardPayVO">
+		INSERT INTO (MCPAY_MEM, MCPAY_CD, CARD_CD)
+		VALUES (memCd##, #memCardPayCd#, #cardCd#)
+	</insert>
+	
+	<!-- 회원 무통장입금 -->
+	<insert id="memberAccPay" parameterClass="memberAccountPayVO">
+		INSERT INTO (MBPAY_CD)
+		VALUES (#memAccPayCd#)
+	</insert>
+	
+	<!-- 회원 핸드폰 결제 -->
+	<insert id="memberPhonePay" parameterClass="memberPhonePayVO">
+		INSERT INTO (MPPAY_CD)
+		VALUES (#memPhPayCd#)
+	</insert>
+</sqlMap>

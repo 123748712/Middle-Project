@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap
+			PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+			"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="watch">
+
+<!-- 	<resultMap class="watchVO" id="watchMap">
+	  <result property="watCd" column="WAT_CD"/>
+	  <result property="movCd" column="MOV_CD"/>
+	  <result property="memCd" column="MEM_CD"/>
+	  <result property="nMemCd" column="NMEM_CD"/>
+	  <result property="watNum" column="WAT_NUM"/>
+	  <result property="watSeat" column="WAT_SEAT"/>
+	  <result property="watPd" column="WAT_PD"/>
+	</resultMap> -->
+
+
+	<insert id="insertWatch" parameterClass ="watchVO">
+		
+		insert into watch
+				values(#watCd#,
+				       #movCd#,
+				       #memCd#,
+				       #nMemCd#,
+				       #watNum#,
+				       #watSeat#,
+				       #watPd#,
+				       #movPa#,
+				       #movPd#,
+				       #watDt#)
+	</insert>
+	
+	<delete id="deleteWatch" parameterClass="String">
+		delete from watch where cart_cd = #watCd#
+	</delete>
+
+
+
+</sqlMap>

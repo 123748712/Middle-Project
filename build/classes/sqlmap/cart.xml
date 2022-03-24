@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap
+			PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+			"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="cart">
+<insert id="insertCart" parameterClass ="cartVO">
+	
+	insert into cart (CART_CD, PROD_CD, PROD_PRI, CART_QTY, PROD_NM, CART_TOTAL)
+	values (#cartCd#, #prodCd#, #prodPri#, #cartQty#, #prodNm#, #cartTotal#)
+	
+</insert>
+
+
+<update id="updateCart" parameterClass="int">
+
+	update cart
+	set cart_qty = #cartQty#
+	where prod_cd = #prodCd#
+	
+</update>
+
+
+
+<delete id="deleteCart" parameterClass="String">
+	
+	delete from cart where cart_cd = #cartCd#
+	
+</delete>
+
+<select id="cartListAll" resultClass="cartVO">
+	select * from cart
+</select>
+
+<select id="cartList" resultClass="cartVO">
+	select * from cart where cart_cd = #cardCd#
+</select>
+</sqlMap>

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap
+			PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+			"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="card">
+
+	<resultMap class="cardVO" id="cardMap">
+		<result property="cardCd" column="card_cd" />
+		<result property="cardCom" column="card_com" />
+		<result property="cardNum" column="card_num" />
+		<result property="memCd" column="mem_cd" />
+		<result property="nmemCd" column="nmem_cd" />
+		<result property="favrCardAt" column="favr_card_at" />
+	</resultMap>
+
+	<select id="getCardList" parameterClass="String" resultMap="cardMap">
+		SELECT CARD_CD
+			,  CARD_COM
+			,  CARD_NUM
+			,  MEM_CD
+			,  NMEM_CD
+			,  FAVR_CARD_AT
+		FROM   CARD
+		WHERE  MEM_CD = #memCd#
+		ORDER BY FAVR_CARD_AT DESC, TO_NUMBER(CARD_CD)
+	</select>
+	
+	<insert id="insertCard" parameterClass="cardVO">
+		INSERT INTO CARD
+		VALUES (CARD_SEQ.NEXTVAL, #cardCom#, #cardNum#, #memCd#, NULL, #favrCardAt#)
+	</insert>
+	
+	<update id="updateCard" parameterClass="cardVO">
+		UPDATE CARD
+		SET    CARD_COM = #cardCom#
+			,  CARD_NUM = #cardNum#
+			,  FAVR_CARD_AT = #favrCardAt#
+		WHERE  MEM_CD = #memCd#
+		AND    CARD_CD = #cardCd#
+	</update>
+	
+	<delete id="deleteCard" parameterClass="map">
+		DELETE FROM CARD
+		WHERE  1=1
+		<isNotEmpty property="data">
+			AND	   MEM_CD = #data[0].memCd#
+			AND    CARD_CD IN
+			<iterate property="data" open="(" close=")" conjunction=",">
+				#data[].cardCd#
+			</iterate>
+		</isNotEmpty>
+	</delete>
+	
+	<select id="selectCardNm" parameterClass="String" resultClass="String">
+		select card_cd
+		from card
+		where card_com = #cardCom#
+	</select>
+	
+</sqlMap>

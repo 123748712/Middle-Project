@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap
+			PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+			"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="memberBuy">
+
+	<resultMap class="memberBuyVO" id="memberBuyMap">
+		<result property="buyPri" column="buy_pri"/>
+		<result property="memCd" column="mem_cd"/>
+		<result property="memberVO" resultMap="memberBuy.memberMap"/>
+		<result property="membershipVO" resultMap="memberBuy.membershipMap"/>
+	</resultMap>
+	
+	<resultMap class="membershipVO" id="membershipMap">
+		<result property="msCd" column="ms_cd"/>
+		<result property="msNum" column="ms_num"/>
+		<result property="msRk" column="ms_rk"/>
+	</resultMap>
+	
+	<resultMap class="memberVO" id="memberMap">
+		<result property="memId" column="mem_id"/>
+		<result property="memNm" column="mem_nm"/>
+	</resultMap>
+
+	<select id="getMemberBuyList" resultMap="memberBuyMap" remapResults="true">
+		SELECT *
+		FROM   (
+		    SELECT SUM(MB.BUY_PRI) BUY_PRI
+		        ,  MB.MEM_CD
+		        ,  M.MEM_ID
+		        ,  M.MEM_NM
+		        ,  MS.MS_CD
+		        ,  MS.MS_NUM
+		        ,  MS.MS_RK
+		    FROM   MEM_BUY MB, MEMBERSHIP MS, MEMBER M
+		    WHERE  MB.MEM_CD = M.MEM_CD
+		    AND    MS.MS_CD = M.MS_CD
+		    GROUP BY MB.MEM_CD, MS.MS_CD, MS.MS_NUM, MS.MS_RK, M.MEM_ID, M.MEM_NM
+		) T
+		ORDER BY T.BUY_PRI DESC, T.MEM_ID
+	</select>
+
+	<insert id="insertMemBuy" parameterClass="MemberBuyVO">
+	  insert into mem_buy ( 
+	  				buy_cd,
+					buy_dt,
+					buy_pays,
+					buy_pri,
+					cart_cd,
+					mem_cd,
+					card_cd
+					) 
+			values (
+					#buyCd#,
+			        #buyDt#,
+			        #buyPays#,
+			        #buyPri#,
+			        #cartCd#,
+			        #memCd#,
+			        #cardCd#)
+	</insert>
+
+	<insert id="insertNonMemBuy" parameterClass="NonMemberBuyVO">
+	  insert into nonmem_buy ( 
+			  			card_cd,
+						cart_cd,
+						nbuy_cd,
+						nbuy_dt,
+						nbuy_pays,
+						nbuy_pri,
+						nmem_cd
+					) 
+			values (
+					#nMemCardCd#,
+			        #nMemCartCd#,
+			        #nBuyCd#,
+			        #nBuydt#,
+			        #nBuyPays#,
+			        #nBuyPri#,
+			        #nMemCd#
+					)
+	</insert>
+
+	<insert id="insertMemCardPay" parameterClass="memberCardPayVO">
+	  insert into mcpay ( 
+			  			card_cd,
+						mcpay_cd,
+						mcpay_mem
+					) 
+			values (
+					    #cardCd#,
+						#memCardPayCd#,		
+				        #memCd#
+					)
+	</insert>
+	
+	
+
+	<insert id="insertNonMemCardPay" parameterClass="nonMemberCardPayVO">
+	  insert into nmcpay ( 
+			  			card_cd,
+			  			nmcpay_cd,
+			  			nmcpay_nmem
+			  			
+					) 
+			values (
+					    #nCardCd#,
+						#nMemCardPayCd#,
+					    #nMemCd#
+					)
+	</insert>
+	
+	
+	
+	<insert id="insertMemPhonePay" parameterClass="memberPhonePayVO">
+	  insert into mppay (mppay_cd, cart_cd) values (#memPhPayCd#, #cartCd#)
+	</insert>
+
+
+	<insert id="insertNonMemPhonePay" parameterClass="nonMemberPhonePayVO">
+	  insert into nmppay (nmppay_cd, nmem_cd) values (#nMemPhPayCd#, #nMemCd#)
+	</insert>
+	
+	<insert id="insertMemAccountPay" parameterClass="memberAccountPayVO">
+	  insert into mbpay (mbpay_cd, cart_cd) values (#memAccPayCd#, #cartCd#)
+	</insert>
+
+
+	<insert id="insertNonMemAccountPay" parameterClass="nonMemberAccountPayVO">
+	  insert into nmbpay (nmbpay_cd, nmem_cd) values (#nMemAccPayCd#, #nMemCd#)
+	</insert>
+	
+	
+	
+</sqlMap>

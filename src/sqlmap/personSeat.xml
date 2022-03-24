@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap
+			PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+			"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="personSeat">
+	
+	<resultMap class="WatchVO" id="personSeatMap">
+		<result property="watCd" column="wat_cd"/>
+		<result property="movCd" column="mov_cd"/>
+		<result property="memCd" column="mem_cd"/>
+		<result property="nMemCd" column="nmem_cd"/>
+		<result property="watNum" column="wat_num"/>
+		<result property="watSeat" column="wat_seat"/>
+		<result property="watPd" column="wat_pd"/>
+		<result property="movPa" column="mov_pa"/>
+		<result property="movPd" column="mov_pd"/>
+	</resultMap>
+	
+	<select id="getSeatAll" resultMap="personSeatMap">
+	
+		SELECT WAT_CD
+		    ,  MOV_CD
+		    ,  MEM_CD
+		    ,  NMEM_CD
+		    ,  WAT_NUM
+		    ,  WAT_SEAT
+		    ,  WAT_PD
+		    ,  MOV_PA
+		    ,  MOV_PD
+		FROM   WATCH
+		WHERE  1=1
+		AND    MOV_CD = #movCd#
+		<!-- <isNotEmpty property="memCd">
+			AND    MEM_CD = #memCd#
+		</isNotEmpty>
+		<isNotEmpty property="nMemCd">
+			AND    NMEM_CD = #nMemCd#
+		</isNotEmpty> -->
+		AND    WAT_PD = #watPd#
+		AND    MOV_PA = #movPa#
+	    AND    MOV_PD = #movPd#
+	    
+	</select>
+</sqlMap>

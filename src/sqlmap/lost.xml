@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sqlMap
+			PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+			"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+			
+			
+<sqlMap namespace="lost">
+
+	<!-- 전체 글 갯수 조회 -->
+	<select id="countLList" resultClass="int">
+	  SELECT COUNT(*) FROM LOST_SC
+	</select>
+
+	<!-- 리스트 출력 -->
+	<select id="lostList" resultClass="lostVO" parameterClass="map">
+	  SELECT A.* FROM (
+    	SELECT ROWNUM AS RNUM, B.*  FROM (
+         	SELECT * FROM LOST_SC 
+         	ORDER BY LOST_NUM DESC) B
+	<![CDATA[
+     	WHERE ROWNUM <= #end#) A 
+ 	  WHERE A.RNUM >= #start#
+	]]>
+	</select>
+	
+	<!-- 게시글 저장 -->
+	<insert id="insertLost" parameterClass="lostVO">
+		
+		<selectKey keyProperty="lost_num" resultClass="int">
+		  SELECT LOST_NUM_SEQ.NEXTVAL FROM DUAL
+		</selectKey>
+		INSERT INTO LOST_SC
+		VALUES(
+			#lost_num#,
+			#mem_cd#,
+			#nmem_cd#,
+			#lost_wri#,
+			#lost_tit#,
+			#lost_con#
+		)
+	</insert>
+	
+	<!-- 게시글 수정/삭제 -->
+	<delete id="lostDelete" parameterClass="int">
+	  DELETE LOST_SC WHERE LOST_NUM = #data#
+	</delete>
+	
+	<update id="lostUpdate" parameterClass="lostVO">
+	  UPDATE LOST_SC
+		SET  LOST_CON = #lost_con#
+	  WHERE  LOST_NUM = #lost_num#
+	</update>
+</sqlMap>
